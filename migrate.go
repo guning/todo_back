@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/spf13/pflag"
-	"todo_back/config"
 	. "todo_back/migration"
 )
 
@@ -16,7 +15,7 @@ const (
 )
 
 
-func main() {
+/*func main() {
 	migrationList := []interface{}{
 		DBInit{},
 	}
@@ -25,22 +24,22 @@ func main() {
 	GetDBInstance()
 	defer Close()
 	DB.LogMode(true)
-	dbInit()
+	MDBInit()
 	if *op == ROLLUP {
-		doMigrate(migrationList)
+		DoMigrate(migrationList)
 	} else {
-		doRollUp(migrationList)
+		DoRollDown(migrationList)
 	}
-}
+}*/
 
-func dbInit() {
+func MDBInit() {
 	if !DB.HasTable(&Migration{}) {
 		DB.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&Migration{})
 		DB.Model(&Migration{}).ModifyColumn("version", "int not null default 0")
 	}
 }
 
-func migrationUp(name string) {
+func MigrationUp(name string) {
 	migrate := Migration{
 		Name: name,
 	}
@@ -59,7 +58,7 @@ func migrationUp(name string) {
 	}
 }
 
-func migrationDown() {
+func MigrationDown() {
 	record := Migration{}
 	if err := DB.Model(&Migration{}).Last(&record).Error; err != nil {
 		panic(err)
@@ -69,22 +68,22 @@ func migrationDown() {
 	}
 }
 
-func doMigrate(fs []interface{}) {
+func DoMigrate(fs []interface{}) {
 	for _, f := range fs {
 		if v, ok := f.(Migrater); ok {
 			defer func() {
 				if r := recover(); r != nil {
 					v.RollBack()
-					migrationDown()
+					MigrationDown()
 				}
 			}()
 			v.RollUp()
-			migrationUp(v.GetName())
+			MigrationUp(v.GetName())
 		}
 	}
 }
 
-func doRollUp(fs []interface{}) {
+func DoRollDown(fs []interface{}) {
 	record := Migration{}
 	if err := DB.Model(&Migration{}).Last(&record).Error; err != nil {
 		panic(err)
@@ -93,7 +92,7 @@ func doRollUp(fs []interface{}) {
 	for _, f := range fs {
 		if v, ok := f.(Migrater); ok && v.GetName() == record.Name {
 			v.RollBack()
-			migrationDown()
+			MigrationDown()
 		}
 	}
 }
