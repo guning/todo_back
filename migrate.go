@@ -1,7 +1,10 @@
 package main
 
 import (
+	"github.com/jinzhu/gorm"
 	"github.com/spf13/pflag"
+	"strings"
+	"todo_back/config"
 	. "todo_back/migration"
 )
 
@@ -10,12 +13,12 @@ var (
 )
 
 const (
-	ROLLUP   string = "rollUp"
-	ROLLDOWN string = "rollDown"
+	ROLLUP   string = "rollup"
+	ROLLBACK string = "rollback"
 )
 
 
-/*func main() {
+func main() {
 	migrationList := []interface{}{
 		DBInit{},
 	}
@@ -25,12 +28,12 @@ const (
 	defer Close()
 	DB.LogMode(true)
 	MDBInit()
-	if *op == ROLLUP {
-		DoMigrate(migrationList)
-	} else {
+	if strings.ToLower(*op) == ROLLBACK {
 		DoRollDown(migrationList)
+	} else {
+		DoMigrate(migrationList)
 	}
-}*/
+}
 
 func MDBInit() {
 	if !DB.HasTable(&Migration{}) {
@@ -45,7 +48,9 @@ func MigrationUp(name string) {
 	}
 	lastRecord := Migration{}
 	if err := DB.Model(&Migration{}).Last(&lastRecord).Error; err != nil {
-		panic(err)
+		if err != gorm.ErrRecordNotFound {
+			panic(err)
+		}
 	}
 
 	if lastRecord.Name == name {

@@ -15,6 +15,7 @@ var DB *gorm.DB
 
 func GetDBInstance() *gorm.DB {
 	if DB == nil {
+		models.DB.Init()
 		DB = models.GetSelfDB()
 	}
 	return DB

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -17,6 +18,9 @@ type Database struct {
 var DB *Database
 
 func (db *Database) Init() {
+	gorm.AddNamingStrategy(&gorm.NamingStrategy{
+		Column: camelNamer,
+	})
 	DB = &Database{
 		Self:   GetSelfDB(),
 	}
@@ -57,6 +61,13 @@ func setupDB(db *gorm.DB) {
 	db.LogMode(viper.GetBool("gormlog"))
 	db.DB().SetMaxIdleConns(0)
 	db.SetLogger(log.New(os.Stdout, "\r\n", 0))
+}
+
+func camelNamer(name string) string {
+	if len(name) <= 2 {
+		return strings.ToLower(name)
+	}
+	return strings.ToLower(string(name[0])) + string(name[1:])
 }
 
 func (db *Database) Close() {
