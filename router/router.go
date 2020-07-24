@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"todo_back/handlers/task"
 	. "todo_back/router/middlewares"
 )
 
@@ -27,7 +28,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	t := g.Group("/task")
 
 	{
-		t.POST("") //new
+		t.POST("", task.Create) //new
 		t.DELETE("/:id") //delete
 		t.PUT("/:id") //update
 		t.GET("") //list

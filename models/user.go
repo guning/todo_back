@@ -1,6 +1,8 @@
 package models
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/jinzhu/gorm"
+)
 
 type User struct {
 	gorm.Model
@@ -9,4 +11,12 @@ type User struct {
 	SessionKey string
 	OpenId string
 	Tasks []Task
+}
+
+func FindByUnionId(unionId string) (User, error) {
+	u := User{}
+	if err := DB.Self.Where("unionId = ?", unionId).First(&u).Error; err != nil {
+		return u, err
+	}
+	return u, nil
 }

@@ -15,4 +15,7 @@ var (
 	ErrEncrypt           = &Errno{Code: 20101, Message: "Encrypt error."}
 	ErrTokenInvalid      = &Errno{Code: 20103, Message: "Token invalid."}
 	ErrPasswordIncorrect = &Errno{Code: 20104, Message: "Password incorrect"}
+
+	//task error
+	ErrTaskCreate      = &Errno{Code: 20201, Message: "Task create failed."}
 )
