@@ -20,5 +20,6 @@ var (
 	ErrTaskCreate      = &Errno{Code: 20201, Message: "Task create failed."}
 	ErrTaskUpdate      = &Errno{Code: 20202, Message: "Task update failed."}
 	ErrTaskDelete      = &Errno{Code: 20203, Message: "Task delete failed."}
-	ErrTaskNotFound      = &Errno{Code: 20203, Message: "Task not found."}
+	ErrTaskList      = &Errno{Code: 20204, Message: "Task list failed."}
+	ErrTaskNotFound      = &Errno{Code: 20205, Message: "Task not found."}
 )

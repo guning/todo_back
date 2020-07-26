@@ -26,6 +26,7 @@ func init() {
 	r.POST("/createTask", task.Create)
 	r.PUT("/updateTask/:id", task.Update)
 	r.DELETE("/deleteTask/:id", task.Delete)
+	r.GET("", task.List)
 }
 
 func Get(uri string, router *gin.Engine) []byte {
@@ -91,6 +92,32 @@ func TestTaskDelete(t *testing.T) {
 
 	param["unionId"] = "unionId"
 	createUpdateDelete(t, uri, param, "DELETE")
+}
+
+func TestTaskList(t *testing.T) {
+	//uri := "/?limit=10&unionId='+or+1=1"
+	uri := "/?limit=10&unionId=unionId&taskName=taskName2"
+
+
+	body := Get(uri, r)
+	fmt.Printf("response: %v \n", string(body))
+
+	res := handlers.Response{}
+	if err := json.Unmarshal(body, &res); err != nil {
+		fmt.Println("json unmarshal failed")
+		panic(err)
+	}
+
+	assert.Equal(t, 0 , res.Code)
+	assert.Equal(t, "OK", res.Message)
+	data := res.Data
+	if m, ok := data.(map[string]interface{}); ok {
+		if count, ok := m["totalCount"]; ok {
+			fmt.Println(count)
+			return
+		}
+	}
+	panic("parse response failed")
 }
 
 

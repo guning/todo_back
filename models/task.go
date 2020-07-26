@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"github.com/jinzhu/gorm"
 	"time"
 )
@@ -26,7 +25,7 @@ func (t *Task) Delete() error {
 	return DB.Self.Delete(&t).Error
 }
 
-func GetTaskList(taskName string, offset, limit int) ([]*Task, uint64, error) {
+func GetTaskList(u User, taskName string, offset, limit int) ([]*Task, uint64, error) {
 	if limit == 0 {
 		limit = 10
 	}
@@ -34,13 +33,18 @@ func GetTaskList(taskName string, offset, limit int) ([]*Task, uint64, error) {
 	tasks := make([]*Task, 0)
 	var count uint64
 
-	where := fmt.Sprintf("taskName like '%%%s%%'", taskName)
+	tmp := DB.Self.Model(&Task{})
+	tmp = tmp.Where("userId = ?", u.ID)
+	if taskName != "" {
+		tmp = tmp.Where("taskName like ?", "%" + taskName + "%")
+	}
 
-	if err := DB.Self.Model(&Task{}).Where(where).Count(&count).Error; err != nil {
+
+	if err := tmp.Count(&count).Error; err != nil {
 		return tasks, count, err
 	}
 
-	if err := DB.Self.Where(where).Offset(offset).Limit(limit).Find(&tasks).Error; err != nil {
+	if err := tmp.Offset(offset).Limit(limit).Find(&tasks).Error; err != nil {
 		return tasks, count, err
 	}
 	return tasks, count, nil

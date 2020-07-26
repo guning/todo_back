@@ -17,8 +17,10 @@ type CreateResponse struct {
 }
 
 type ListRequest struct {
-	Offset   int    `json:"offset"`
-	Limit    int    `json:"limit"`
+	UnionId string
+	TaskName string
+	Offset   int
+	Limit    int
 }
 
 type ListResponse struct {
