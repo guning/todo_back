@@ -19,5 +19,6 @@ var (
 	//task error
 	ErrTaskCreate      = &Errno{Code: 20201, Message: "Task create failed."}
 	ErrTaskUpdate      = &Errno{Code: 20202, Message: "Task update failed."}
+	ErrTaskDelete      = &Errno{Code: 20203, Message: "Task delete failed."}
 	ErrTaskNotFound      = &Errno{Code: 20203, Message: "Task not found."}
 )

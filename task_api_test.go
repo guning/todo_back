@@ -25,6 +25,7 @@ func init() {
 	r = gin.Default()
 	r.POST("/createTask", task.Create)
 	r.PUT("/updateTask/:id", task.Update)
+	r.DELETE("/deleteTask/:id", task.Delete)
 }
 
 func Get(uri string, router *gin.Engine) []byte {
@@ -67,7 +68,7 @@ func TestTaskCreate(t *testing.T) {
 	param["taskName"] = "taskName"
 	param["deadline"] = time.Now()
 	param["detail"] = "detail"
-	createUpdate(t, uri, param, "POST")
+	createUpdateDelete(t, uri, param, "POST")
 
 }
 
@@ -80,10 +81,20 @@ func TestTaskUpdate(t *testing.T) {
 	param["taskName"] = "taskName27"
 	param["deadline"] = time.Now()
 	param["detail"] = "detail1"
-	createUpdate(t, uri, param, "PUT")
+	createUpdateDelete(t, uri, param, "PUT")
 }
 
-func createUpdate(t *testing.T, uri string, param map[string]interface{}, method string) {
+func TestTaskDelete(t *testing.T) {
+	uri := "/deleteTask/6"
+
+	param := make(map[string]interface{})
+
+	param["unionId"] = "unionId"
+	createUpdateDelete(t, uri, param, "DELETE")
+}
+
+
+func createUpdateDelete(t *testing.T, uri string, param map[string]interface{}, method string) {
 	body := PostJson(uri, param, r, method)
 
 	fmt.Printf("response: %v \n", string(body))
