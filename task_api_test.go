@@ -24,6 +24,7 @@ func init() {
 	models.DB.Self.LogMode(true)
 	r = gin.Default()
 	r.POST("/createTask", task.Create)
+	r.PUT("/updateTask/:id", task.Update)
 }
 
 func Get(uri string, router *gin.Engine) []byte {
@@ -41,10 +42,10 @@ func Get(uri string, router *gin.Engine) []byte {
 }
 
 
-func PostJson(uri string, param map[string]interface{}, router *gin.Engine) []byte {
+func PostJson(uri string, param map[string]interface{}, router *gin.Engine, method string) []byte {
 	jsonByte, _ := json.Marshal(param)
 
-	req := httptest.NewRequest("POST", uri, bytes.NewReader(jsonByte))
+	req := httptest.NewRequest(method, uri, bytes.NewReader(jsonByte))
 
 	w := httptest.NewRecorder()
 
@@ -66,8 +67,24 @@ func TestTaskCreate(t *testing.T) {
 	param["taskName"] = "taskName"
 	param["deadline"] = time.Now()
 	param["detail"] = "detail"
+	createUpdate(t, uri, param, "POST")
 
-	body := PostJson(uri, param, r)
+}
+
+func TestTaskUpdate(t *testing.T) {
+	uri := "/updateTask/6"
+
+	param := make(map[string]interface{})
+
+	param["unionId"] = "unionId"
+	param["taskName"] = "taskName27"
+	param["deadline"] = time.Now()
+	param["detail"] = "detail1"
+	createUpdate(t, uri, param, "PUT")
+}
+
+func createUpdate(t *testing.T, uri string, param map[string]interface{}, method string) {
+	body := PostJson(uri, param, r, method)
 
 	fmt.Printf("response: %v \n", string(body))
 
@@ -88,3 +105,4 @@ func TestTaskCreate(t *testing.T) {
 	}
 	panic("parse response failed")
 }
+

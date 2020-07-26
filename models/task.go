@@ -22,9 +22,10 @@ func (t *Task) Update() error {
 	return DB.Self.Save(&t).Error
 }
 
-func DeleteById(id uint) error {
+func DeleteById(id uint, user User) error {
 	task := Task{
 		Model:    gorm.Model{ID: id},
+		UserId: user.ID,
 	}
 	return DB.Self.Delete(&task).Error
 }

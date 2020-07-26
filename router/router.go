@@ -30,7 +30,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	{
 		t.POST("", task.Create) //new
 		t.DELETE("/:id") //delete
-		t.PUT("/:id") //update
+		t.PUT("/:id", task.Update) //update
 		t.GET("") //list
 	}
 	return g
