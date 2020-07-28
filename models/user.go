@@ -8,7 +8,6 @@ type User struct {
 	gorm.Model
 	IsLogin uint8
 	UnionId string
-	SessionKey string
 	OpenId string
 	Tasks []Task
 }
@@ -19,4 +18,8 @@ func FindByUnionId(unionId string) (User, error) {
 		return u, err
 	}
 	return u, nil
+}
+
+func (u *User) Create() error {
+	return DB.Self.Create(&u).Error
 }

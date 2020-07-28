@@ -11,7 +11,7 @@ import (
 
 
 func TokenH(c *gin.Context) {
-	if c.Request.RequestURI == "/auth" {
+	if c.Request.RequestURI == "/user/auth" {
 		c.Next()
 	}
 
@@ -21,7 +21,8 @@ func TokenH(c *gin.Context) {
 	} else {
 		if t, err := t.ParseValidateToken(token); err != nil {
 			log.Print("token invalid", err)
-			c.AbortWithStatus(403)
+			handlers.SendResponse(c, errno.ErrTokenInvalid, nil)
+			return
 		} else {
 			u, err := models.FindByUnionId(t.UnionId)
 			if err != nil {

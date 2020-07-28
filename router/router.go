@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"todo_back/handlers/task"
+	"todo_back/handlers/user"
 	. "todo_back/router/middlewares"
 )
 
@@ -21,7 +22,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	u := g.Group("/user")
 
 	{
-		u.POST("/auth")
+		u.POST("/auth", user.Auth)
 	}
 
 	t := g.Group("/task")

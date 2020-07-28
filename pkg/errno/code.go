@@ -14,7 +14,10 @@ var (
 	ErrUserNotFound      = &Errno{Code: 20102, Message: "User not found."}
 	ErrEncrypt           = &Errno{Code: 20101, Message: "Encrypt error."}
 	ErrTokenInvalid      = &Errno{Code: 20103, Message: "Token invalid."}
-	ErrPasswordIncorrect = &Errno{Code: 20104, Message: "Password incorrect"}
+	//ErrPasswordIncorrect = &Errno{Code: 20104, Message: "Password incorrect"}
+	ErrCodeInvalid      = &Errno{Code: 20105, Message: "Code invalid."}
+	ErrGetUser      = &Errno{Code: 20106, Message: "Getting user msg failed."}
+	ErrUserCreate      = &Errno{Code: 20107, Message: "User create failed."}
 
 	//task error
 	ErrTaskCreate      = &Errno{Code: 20201, Message: "Task create failed."}
