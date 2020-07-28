@@ -15,11 +15,17 @@ func Create(c *gin.Context) {
 		SendResponse(c, errno.ErrBind, nil)
 		return
 	}
-	log.Printf("user id is %s, task msg is %s", r.UnionId, r.TaskName)
+	log.Printf("task msg is %s", r.TaskName)
 
-	u, err := models.FindByUnionId(r.UnionId)
-	if err != nil {
-		SendResponse(c, errno.ErrUserNotFound, nil)
+	tmp, ok := c.Get("user")
+	if !ok {
+		SendResponse(c, errno.ErrUserNotFound, "cannot get user")
+		return
+	}
+	u, ok := tmp.(models.User)
+
+	if !ok {
+		SendResponse(c, errno.ErrUserNotFound, "invalid user")
 		return
 	}
 

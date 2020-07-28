@@ -26,11 +26,17 @@ func Delete(c *gin.Context) {
 		return
 	}
 
-	log.Printf("Task id is %d, unionId is %s", id, r.UnionId)
+	log.Printf("Task id is %d", id)
 
-	u, err := models.FindByUnionId(r.UnionId)
-	if err != nil {
-		SendResponse(c, errno.ErrUserNotFound, nil)
+	tmp, ok := c.Get("user")
+	if !ok {
+		SendResponse(c, errno.ErrUserNotFound, "cannot get user")
+		return
+	}
+	u, ok := tmp.(models.User)
+
+	if !ok {
+		SendResponse(c, errno.ErrUserNotFound, "invalid user")
 		return
 	}
 

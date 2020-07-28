@@ -6,6 +6,7 @@ import (
 	"strconv"
 	. "todo_back/handlers"
 	"todo_back/models"
+	"todo_back/pkg/contvar"
 	"todo_back/pkg/errno"
 )
 
@@ -16,7 +17,6 @@ func List(c *gin.Context) {
 	offset, _ := strconv.Atoi(c.Query("offset"))
 
 	r := ListRequest{
-		UnionId: c.Query("unionId"),
 		TaskName: c.Query("taskName"),
 		Limit: limit,
 		Offset: offset,
@@ -24,12 +24,18 @@ func List(c *gin.Context) {
 
 
 	if r.Limit == 0 {
-		r.Limit = 10
+		r.Limit = contvar.DefaultLimit
 	}
 
-	u, err := models.FindByUnionId(r.UnionId)
-	if err != nil {
-		SendResponse(c, errno.ErrUserNotFound, nil)
+	tmp, ok := c.Get("user")
+	if !ok {
+		SendResponse(c, errno.ErrUserNotFound, "cannot get user")
+		return
+	}
+	u, ok := tmp.(models.User)
+
+	if !ok {
+		SendResponse(c, errno.ErrUserNotFound, "invalid user")
 		return
 	}
 

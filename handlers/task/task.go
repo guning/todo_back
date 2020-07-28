@@ -6,7 +6,6 @@ import (
 )
 
 type CreateRequest struct {
-	UnionId string `json:"unionId"`
 	TaskName string `json:"taskName"`
 	Detail string `json:"detail"`
 	Deadline time.Time `json:"deadline"`
@@ -17,7 +16,6 @@ type CreateResponse struct {
 }
 
 type ListRequest struct {
-	UnionId string
 	TaskName string
 	Offset   int
 	Limit    int

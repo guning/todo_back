@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http/httptest"
@@ -23,10 +24,21 @@ func init() {
 	models.DB.Init()
 	models.DB.Self.LogMode(true)
 	r = gin.Default()
+	r.Use(tokenMiddleware)
 	r.POST("/createTask", task.Create)
 	r.PUT("/updateTask/:id", task.Update)
 	r.DELETE("/deleteTask/:id", task.Delete)
 	r.GET("", task.List)
+}
+
+func tokenMiddleware(c *gin.Context) {
+	c.Set("user", models.User{
+		UnionId: "unionId",
+		Model: gorm.Model{
+			ID: 1,
+		},
+	})
+	c.Next()
 }
 
 func Get(uri string, router *gin.Engine) []byte {
@@ -65,7 +77,6 @@ func TestTaskCreate(t *testing.T) {
 
 	param := make(map[string]interface{})
 
-	param["unionId"] = "unionId"
 	param["taskName"] = "taskName"
 	param["deadline"] = time.Now()
 	param["detail"] = "detail"
@@ -74,11 +85,10 @@ func TestTaskCreate(t *testing.T) {
 }
 
 func TestTaskUpdate(t *testing.T) {
-	uri := "/updateTask/6"
+	uri := "/updateTask/9"
 
 	param := make(map[string]interface{})
 
-	param["unionId"] = "unionId"
 	param["taskName"] = "taskName27"
 	param["deadline"] = time.Now()
 	param["detail"] = "detail1"
@@ -90,13 +100,12 @@ func TestTaskDelete(t *testing.T) {
 
 	param := make(map[string]interface{})
 
-	param["unionId"] = "unionId"
 	createUpdateDelete(t, uri, param, "DELETE")
 }
 
 func TestTaskList(t *testing.T) {
 	//uri := "/?limit=10&unionId='+or+1=1"
-	uri := "/?limit=10&unionId=unionId&taskName=taskName2"
+	uri := "/?limit=10&taskName=taskName2"
 
 
 	body := Get(uri, r)

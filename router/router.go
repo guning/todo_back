@@ -21,15 +21,14 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	u := g.Group("/user")
 
 	{
-		u.POST("/login")
-		u.POST("/login/quit")
+		u.POST("/auth")
 	}
 
 	t := g.Group("/task")
 
 	{
 		t.POST("", task.Create) //new
-		t.DELETE("/:id") //delete
+		t.DELETE("/:id", task.Delete) //delete
 		t.PUT("/:id", task.Update) //update
 		t.GET("", task.List) //list
 	}
