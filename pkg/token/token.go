@@ -12,7 +12,6 @@ import (
 
 type Token struct {
 	OpenId string `json:"openId"`
-	SessionKey string `json:"sessionKey"`
 	UnionId string `json:"unionId"`
 	ExpiredTime time.Time `json:"expiredTime"`
 	jwt.StandardClaims

@@ -15,7 +15,6 @@ func TestToken(t *testing.T) {
 	m, _ := time.ParseDuration("1m")
 	tk := token.Token{
 		OpenId:      "openId",
-		SessionKey:  "sessionKey",
 		UnionId:     "unionId",
 		ExpiredTime: time.Now().Add(30 * m),
 		StandardClaims: jwt.StandardClaims{
