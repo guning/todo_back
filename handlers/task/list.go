@@ -6,7 +6,7 @@ import (
 	"strconv"
 	. "todo_back/handlers"
 	"todo_back/models"
-	"todo_back/pkg/contvar"
+	"todo_back/pkg/constvar"
 	"todo_back/pkg/errno"
 )
 
@@ -24,7 +24,7 @@ func List(c *gin.Context) {
 
 
 	if r.Limit == 0 {
-		r.Limit = contvar.DefaultLimit
+		r.Limit = constvar.DefaultLimit
 	}
 
 	tmp, ok := c.Get("user")

@@ -1,4 +1,4 @@
-package contvar
+package constvar
 
 const (
 	DefaultLimit = 10
